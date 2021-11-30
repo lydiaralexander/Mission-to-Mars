@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
 
 # Import Splinter, BeautifulSoup, and Pandas
 from splinter import Browser
@@ -10,30 +5,18 @@ from bs4 import BeautifulSoup as soup
 import pandas as pd
 from webdriver_manager.chrome import ChromeDriverManager
 
-
-# In[2]:
-
-
 # Set the executable path and initialize Splinter
 executable_path = {'executable_path': ChromeDriverManager().install()}
 browser = Browser('chrome', **executable_path, headless=False)
 
 
 # ### Visit the NASA Mars News Site
-
-# In[3]:
-
-
 # Visit the mars nasa news site
 url = 'https://redplanetscience.com/'
 browser.visit(url)
 
 # Optional delay for loading the page
 browser.is_element_present_by_css('div.list_text', wait_time=1)
-
-
-# In[4]:
-
 
 # Convert the browser html to a soup object and then quit the browser
 html = browser.html
@@ -134,36 +117,23 @@ df.to_html()
 
 # ### Hemispheres
 
-# In[16]:
-
-
 # 1. Use browser to visit the URL 
 url = 'https://marshemispheres.com/'
 
 browser.visit(url)
 
-
-# In[17]:
-
-
 #parse the resulting html with soup
 html = browser.html
 hemi_soup = soup(html, 'html.parser')
-
-
-# In[18]:
-
 
 # title_results = hemi_soup.find_all('div', class_="item")
 # image_url_results = hemi_soup.find_all('div', class_="item")
 
 results = hemi_soup.find_all('div', class_="item")
+results2 = hemi_soup.find('img', class_="thumb").get('src')
 
 # print(results)
-
-
-# In[19]:
-
+# print(results2)
 
 # 2. Create a list to hold the images and titles.
 hemisphere_image_urls = []
@@ -177,27 +147,27 @@ for result in results:
 #     image_elem.click()
     title = result.find("h3").text
     
+    image_url = result.find('img')['src']
+#     print(image_url)
+    
     #get the urls
-    image_url = result.a['href']
+#     image_url = result.a['href']
+    actual_image_url = url + image_url
+    
+#     for link in hemi_soup.find_all('img'):
+#         print(link.get('src'))
     
     hemisphere_image_urls.append({"image url": image_url, "title": title})
 
-    browser.back()
+#     browser.back()
 
-    print(image_url)
-    print(title)
-
-
-# In[20]:
-
+# #     print(image_url)
+    print(actual_image_url)
+#     print(title)
 
 # 4. Print the list that holds the dictionary of each image url and title.
 
 print(hemisphere_image_urls)
-
-
-# In[21]:
-
 
 # 5. Quit the browser
 browser.quit()

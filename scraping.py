@@ -21,6 +21,8 @@ def scrape_all():
         "last_modified": dt.datetime.now(),
         "hemispheres": hemi_data(browser)
     }
+
+    browser.quit()
     return data
 
 # set your executable path
@@ -117,19 +119,27 @@ def hemi_data(browser):
 # get the titles
     for result in results:
         hemisphere = {}
-#       image_elem = browser.find_by_("a['href'])[1]
-#       image_elem.click()
+#     image_elem = browser.find_by_("a['href'])[1]
+#     image_elem.click()
         title = result.find("h3").text
-
+    
+        image_url = result.find('img')['src']
+#     print(image_url)
+    
     #get the urls
-        image_url = result.a['href']
+#     image_url = result.a['href']
+        actual_image_url = url + image_url
+    
+#     for link in hemi_soup.find_all('img'):
+#         print(link.get('src'))
+    
+        hemisphere_image_urls.append({"image url": actual_image_url, "title": title})
 
-        hemisphere_image_urls.append({"image url": image_url, "title": title})
+#     browser.back()
 
-        browser.back()
-
-        print(image_url)
-        print(title)
+# #     print(image_url)
+    print(actual_image_url)
+#     print(title)
 
     return hemisphere_image_urls
         
